@@ -104,6 +104,7 @@ public struct Shimmer: ViewModifier {
                     endPoint: endPoint
                 )
                 .ignoresSafeArea()
+                .scaledToFill()
             )
             .animation(
                 isActive ? animation : .linear(duration: 0), // FW: This is a correct way to stop animation. If using `isActive ? .linear(...) : .none` instead then the animation would be choppy. https://stackoverflow.com/questions/61830571/whats-causing-swiftui-nested-view-items-jumpy-animation-after-the-initial-drawi/61841018#61841018
