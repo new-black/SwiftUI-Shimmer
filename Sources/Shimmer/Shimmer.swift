@@ -95,8 +95,15 @@ public struct Shimmer: ViewModifier {
         }
     }
 
+    /// A mask clips to the bounds of the view it masks, and this mask stays applied while inactive to
+    /// keep the content's identity stable. Outsetting the masked bounds keeps anything drawn past the
+    /// layout frame (e.g. iOS 26 switches, image glyphs) visible, while the outer padding restores the
+    /// original layout.
+    private static let maskOutset: CGFloat = 8
+
     public func body(content: Content) -> some View {
         content
+            .padding(Self.maskOutset)
             .mask(
                 LinearGradient(
                     gradient: isActive ? gradient : .transparent,
@@ -106,6 +113,7 @@ public struct Shimmer: ViewModifier {
                 .ignoresSafeArea()
                 .scaledToFill()
             )
+            .padding(-Self.maskOutset)
             .animation(
                 isActive ? animation : .linear(duration: 0), // FW: This is a correct way to stop animation. If using `isActive ? .linear(...) : .none` instead then the animation would be choppy. https://stackoverflow.com/questions/61830571/whats-causing-swiftui-nested-view-items-jumpy-animation-after-the-initial-drawi/61841018#61841018
                 value: isInitialState
